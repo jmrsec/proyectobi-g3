@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block titulo %} Nosotros {% endblock %}
+{%load static %}
+{% block contenido %} 
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <br>
+        <header>
+          <h1  class="bg-dark text-white py-4 text-center">Grupo 3</h1>
+        </header>
+      
+        <main class="m-4">
+          <section>
+            <div class="d-flex flex-wrap justify-content-center" >
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Bernedo Acosta, Bruno Eduardo" class="img-fluid rounded-circle mb-3">
+                <h3>Bernedo Acosta, Bruno Eduardo</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Chumpitaz Rodriguez, Renzo Fernando" class="img-fluid rounded-circle mb-3">
+                <h3>Chumpitaz Rodriguez, Renzo Fernando</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Cisneros Condori, Gloria Stephany" class="img-fluid rounded-circle mb-3">
+                <h3>Cisneros Condori, Gloria Stephany</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Garay Pastrana, Jeanpier Miguel" class="img-fluid rounded-circle mb-3">
+                <h3>Garay Pastrana, Jeanpier Miguel</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Guillen Piña, Ritcy Christina" class="img-fluid rounded-circle mb-3">
+                <h3>Guillen Piña, Ritcy Christina</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Machare Ramirez, Jeremy Smith" class="img-fluid rounded-circle mb-3">
+                <h3>Machare Ramirez, Jeremy Smith</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+              <div class="miembro d-flex flex-column align-items-center m-2" style="width: 200px;">
+                <img src="{% static 'img/foto.png' %}" alt="Villafranca Cardoso, Patrick Christopher" class="img-fluid rounded-circle mb-3">
+                <h3>Villafranca Cardoso, Patrick Christopher</h3>
+                <p>Estudiante Ing. Sistemas.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+      
+      </body>
+    </html>
+    
+    {% endblock %}
