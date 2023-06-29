@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+    <title>Iniciar sesión con reconocimiento facial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Iniciar sesión con reconocimiento facial</h1>
+    <div id="camera-container">
+        <video id="video-feed" width="320" height="240" autoplay></video>
+        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+    </div>
+    <form id="login-form" method="post" action="{% url 'inicio' %}">
+        {% csrf_token %}
+        <input type="hidden" name="image_data" id="image-data" value="">
+        <input type="hidden" name="dni" id="dni" value="">
+        <input type="hidden" name="nombre" id="nombre" value="">
+        <input type="hidden" name="apellido" id="apellido" value="">
+        <input type="submit" value="Iniciar sesión" name="loginid" id="loginid" hidden>
+    </form>
+
+    <script>
+        // Acceso a la cámara web
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var video = document.getElementById('video-feed');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function (error) {
+                console.log('Error al acceder a la cámara:', error);
+            });
+
+        var captureButton = document.getElementById('capture-button');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+
+        score = 1000
+        // Envío de la imagen al servidor
+        function sendImage() {
+            var video = document.getElementById('video-feed');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            var imageData = canvas.toDataURL('image/jpeg');
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'login' %}",
+                data: {
+                    'image_data': imageData,
+                    'score' : score,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    // Manejar la respuesta del servidor
+                    captureResponse = response;
+                    score = response.Score
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.log('Error en la solicitud:', error);
+                },
+                complete: function () {
+                    if (captureResponse.success) {
+                        console.log(captureResponse);
+                        var boton = document.getElementById("loginid");
+                        var dni = document.getElementById("dni");
+                        var nombre = document.getElementById("nombre");
+                        var apellido = document.getElementById("apellido");
+                        dni.value = captureResponse.usuario.id
+                        nombre.value = captureResponse.usuario.nombre
+                        apellido.value = captureResponse.usuario.apellido
+                        boton.removeAttribute("hidden");
+                    } else {
+                        setTimeout(sendImage, 1000);
+                    }
+                }
+            });
+        }
+        setTimeout(sendImage, 1000);
+        /*
+        setTimeout(function() {
+           setInterval(senImage, 5000);
+        }, 10000);*/
+        
+    </script>
+</body>
+</html>

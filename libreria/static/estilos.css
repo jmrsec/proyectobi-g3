@@ -1,0 +1,46 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 70px; /* Ajusta el ancho deseado */
+    background-color: #f1f1f1;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar li a {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    color: #000;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 11px; /* Ajusta el tamaño de la fuente deseado */
+}
+
+.sidebar li a:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+.sidebar li a i {
+    margin-right: 5px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block titulo %} Editar Libros {% endblock %}
+
+{% block contenido %}
+
+
+<div style="background-color: snow">
+    <br>
+    <form enctype="multipart/form-data" class="col-4 p-3 m-auto"
+        style="background-color:#FEF9E7 ; border-radius: 10px; border: 1px solid;" method="POST">
+
+        {% csrf_token %}
+        <h3 class="text-center alert alert-warning"><i class="bi bi-book"></i> Modificar Libros</h3>
+
+        {% for campo in formulario %}
+        <div class="mb-3">
+            <label for="" class="form-label">{{ campo.label }}</label>
+
+            {% if campo.field.widget.input_type == 'file' and campo.value %}
+            <img src="{{MEDIA_URL}}/imagenes/{{campo.value}}" width="80" alt="" srcset="">
+            {% endif %}
+
+            <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}"
+                placeholder="{{campo.label}}" value="{{ campo.value | default:'' }}">
+        </div>
+        <div class="col-12 help-text">{{ campo.errors }}</div>
+        {% endfor %}
+
+        <div class="mb-3">
+            <label for="" class="form-label">Imagen</label>
+            <input type="file" class="form-control" name="imagen" id="imagen">
+        </div>
+
+        <div style="text-align: center;">
+            <a name="" id="" class="btn btn-primary" href="{% url 'usuarios' %}" role="button"><i class="bi bi-skip-backward"></i> Regresar</a>
+            <button type="submit" class="btn btn-warning ml-2" name="btnRegistrar" value="Enviar informacion"><i
+                class="bi bi-check-square"></i>
+            Modificar usuario</button>
+        </div>
+        
+    </form>
+    <br>
+</div>
+
+
+{% endblock %}

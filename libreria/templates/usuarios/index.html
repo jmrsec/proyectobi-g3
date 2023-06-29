@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block titulo %} Lista de usuarios {% endblock %}
+
+{% block contenido %}
+<br>
+
+<!--<div class="card">
+        <div class="card-header">
+            Listar Libros
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Libros</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Imagen</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Django con Python</td>
+                            <td>Imagen.jpg</td>
+                            <td>Libro que habla sobre el framework de Django</td>
+                            <td>Editar | Borrar</td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>                     
+            
+           
+        </div>
+        <div class="card-footer text-muted">
+            Grupo 2 - Inteligencia de Negocios
+        </div>
+    </div>-->
+
+<div class="container-fluid row">
+    <form enctype="multipart/form-data" class="col-4 p-3" method="post">
+
+        {% csrf_token %}
+        <h3 class="text-center alert alert-success"><i class="bi bi-book"></i> Registro de usuario</h3>
+
+        {% for campo in formulario %}
+        <div class="mb-3">
+            <label for="" class="form-label">{{ campo.label }}</label>
+            <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}"
+                placeholder="{{campo.label}}" value="{{ campo.value | default:'' }}">
+        </div>
+        <div class="col-12 help-text">{{ campo.errors }}</div>
+        {% endfor %}
+
+        <div class="mb-3">
+            <label for="" class="form-label">Imagen</label>
+            <input type="file" class="form-control" name="imagen" id="imagen">
+        </div>
+        <!--<div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Imagen</label>
+            <input type="text" class="form-control" name="nombre">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Descripción del libro</label>
+            <input type="text" class="form-control" name="apaterno">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Fecha de publicación</label>
+            <input type="date" class="form-control" name="amaterno">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Autor</label>
+            <input type="text" class="form-control" name="telefono">
+        </div>-->
+
+        <!--<input type="submit" name="" id="" class="btn btn-primary"
+            value="Enviar informacion">-->
+        <button type="submit" class="btn btn-primary" name="btnRegistrar" value="Enviar informacion"><i
+                class="bi bi-save2-fill"></i>
+            Registrar usuario</button>
+    </form>
+
+    <div class="col-8 p-3">
+        <table class="table table-bordered">
+            <thead class="table" style="text-align: center;background-color:#2C3E50">
+                <tr style="color:#FFFFFF">
+                    <th>DNI</th>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;background-color: white;">
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{usuario.dni}}</td>
+
+                    {% for imagen in imagenes %}
+                    {% if forloop.parentloop.counter == forloop.counter %}
+                    <td><img src="data:image/jpeg;base64,{{imagen}}" alt="Imagen"></td>
+                    {% endif %}
+                    {% endfor %}
+                    <td>{{usuario.nombre}}</td>
+                    <td>{{usuario.apellido}}</td>
+                    <td>
+                        <a href="{% url 'editar_usuario' usuario.dni%}" class="btn btn-small btn-warning mb-2"><i
+                                class="bi bi-pencil-square"></i></a>
+                        <a href="{% url 'eliminar_usuario' usuario.dni%}" class="btn btn-small btn-danger"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+{% endblock %}
