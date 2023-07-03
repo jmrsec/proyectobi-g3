@@ -1,25 +1,91 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
-    <title>Iniciar sesión con reconocimiento facial</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'estilos.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Login Facial - Grupo 3</title>
+    <h2 class="text-center font-weight-light my-2 p-2 py-4 bg-light" style="color: darkslategray;">Reconocimiento Facial - CRUD de Libros</h2>
+
 </head>
+
 <body>
-    <h1>Iniciar sesión con reconocimiento facial</h1>
-    <div id="camera-container">
-        <video id="video-feed" width="320" height="240" autoplay></video>
-        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+    <br>
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-5 p-4">		       
+                            <img src="../static/img/icono9.png" alt="Logo del curso" width="400" height="400">              		        
+                        </div>
+            
+                        <div class="col-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-3">
+                                <div class="card-header" style="background-color: aliceblue;">
+                                    <h3 class="text-center font-weight-light my-4">Bienvenido, mire a la cámara</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="camera-container">
+                                        <video id="video-feed" width="320" height="240" autoplay></video>
+                                        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+                                    </div>                                                                      
+                                </div>
+
+                                <div class="card-footer" style="background-color: aliceblue;">
+                                    <h4 id="miH4" class="text-center my-2">Escaneando rostro...</h4>
+                                    <form id="login-form" method="post" action="{% url 'login' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="image_data" id="image-data" value="">
+                                        <input type="hidden" name="dni" id="dni" value="">
+                                        <input type="hidden" name="nombre" id="nombre" value="">
+                                        <input type="hidden" name="apellido" id="apellido" value="">
+                                        <input type="hidden" name="token" id="token" value="0">                       
+                                        <input type="submit" class="btn btn-primary rounded-pill btn-block w-50"
+                                            name="loginid" value="Iniciar sesión" id="loginid" style="margin: 0 auto; font-size: 1.5em;" hidden>                                                                                                  
+                                    </form>  
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        </div><br><br>     
+
+        
+        <div id="layoutAuthentication_footer" class="mt-auto">
+            <footer class="py-4 bg-light">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Proyecto Final - Inteligencia de Negocios</div>
+                        <div>
+                            <div>Grupo N°3</div>
+
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>        
+
     </div>
-    <form id="login-form" method="post" action="{% url 'inicio' %}">
-        {% csrf_token %}
-        <input type="hidden" name="image_data" id="image-data" value="">
-        <input type="hidden" name="dni" id="dni" value="">
-        <input type="hidden" name="nombre" id="nombre" value="">
-        <input type="hidden" name="apellido" id="apellido" value="">
-        <input type="submit" value="Iniciar sesión" name="loginid" id="loginid" hidden>
-    </form>
+
 
     <script>
         // Acceso a la cámara web
@@ -48,7 +114,8 @@
                 url: "{% url 'login' %}",
                 data: {
                     'image_data': imageData,
-                    'score' : score,
+                    'score': score,
+                    'token':false,
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 },
                 success: function (response) {
@@ -67,10 +134,14 @@
                         var dni = document.getElementById("dni");
                         var nombre = document.getElementById("nombre");
                         var apellido = document.getElementById("apellido");
+                        var token = document.getElementById("token");
+                        var miH4 = document.getElementById("miH4");
+                        token.value = captureResponse.token
                         dni.value = captureResponse.usuario.id
                         nombre.value = captureResponse.usuario.nombre
                         apellido.value = captureResponse.usuario.apellido
-                        boton.removeAttribute("hidden");
+                        miH4.hidden = true;
+                        boton.removeAttribute("hidden");                        
                     } else {
                         setTimeout(sendImage, 1000);
                     }
@@ -82,7 +153,9 @@
         setTimeout(function() {
            setInterval(senImage, 5000);
         }, 10000);*/
-        
+
     </script>
+
 </body>
+
 </html>

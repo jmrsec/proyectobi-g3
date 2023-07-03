@@ -5,13 +5,13 @@
 {% block contenido %}
 
 
-<div style="background-color: snow">
-    <br>
+<div>
+    <br> <br>
     <form enctype="multipart/form-data" class="col-4 p-3 m-auto"
         style="background-color:#FEF9E7 ; border-radius: 10px; border: 1px solid;" method="POST">
 
         {% csrf_token %}
-        <h3 class="text-center alert alert-warning"><i class="bi bi-book"></i> Modificar Libros</h3>
+        <h3 class="text-center alert alert-warning"><i class="bi bi-book"></i> Modificar Usuario</h3>
 
         {% for campo in formulario %}
         <div class="mb-3">
@@ -28,7 +28,7 @@
         {% endfor %}
 
         <div class="mb-3">
-            <label for="" class="form-label">Imagen</label>
+            <label for="" class="form-label">Agregar Imagen</label>
             <input type="file" class="form-control" name="imagen" id="imagen">
         </div>
 
@@ -40,7 +40,7 @@
         </div>
         
     </form>
-    <br>
+    <br> <br>
 </div>
 
 

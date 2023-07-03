@@ -12,17 +12,19 @@ import base64
 import io
 from .modelFR import recortar_cara
 from .modelFR import verificarImagenBD
+from django.contrib.auth import login as log
+from .loaded_model import iniciarSesion, cerrarSesion, getToken
+
 # Create your views here.
 
-@login_required
 def inicio(request):
-    return render(request, 'vistas/inicio.html')
+    return validarSesion(request, render(request, 'vistas/inicio.html'))
 
-@login_required
+
 def nosotros(request):
-    return render(request, 'nosotros/nosotros.html')
+    return validarSesion(request, render(request, 'nosotros/nosotros.html'))
 
-@login_required
+
 def usuarios(request):
     usuarios = Usuario.objects.all()
     imagenes = []
@@ -56,9 +58,9 @@ def usuarios(request):
         # Guardar el objeto del modelo en la tabla de ImagenUsuario de la base de datos
         imagen_usuario.save()
         return redirect('usuarios')
-    return render(request, 'usuarios/index.html', {'usuarios': usuarios,'imagenes': imagenes, 'formulario': formulario})
+    return validarSesion(request, render(request, 'usuarios/index.html', {'usuarios': usuarios,'imagenes': imagenes, 'formulario': formulario}))
 
-@login_required
+
 def editar_usuario(request,dni):
     usuario = Usuario.objects.get(dni=dni)
     formulario = UsuarioForm(request.POST or None, request.FILES or None, instance=usuario)
@@ -83,9 +85,9 @@ def editar_usuario(request,dni):
         # Guardar el objeto del modelo en la tabla de ImagenUsuario de la base de datos
         imagen_usuario.save()
         return redirect('usuarios')
-    return render(request, 'usuarios/editar.html', {'formulario': formulario})
+    return validarSesion(request, render(request, 'usuarios/editar.html', {'formulario': formulario}))
 
-@login_required
+
 def eliminar_usuario(request,dni):
     imagen = ImagenUsuario.objects.filter(usuario_id=dni)
     imagen.delete()
@@ -93,55 +95,58 @@ def eliminar_usuario(request,dni):
     usuario.delete()
     return redirect('usuarios')
 
-@login_required
+
 def imagenes(request):
     imagenes = ImagenUsuario.objects.all()
     formulario = UsuarioForm(request.POST or None, request.FILES or None)
     if formulario.is_valid():
         formulario.save()
         return redirect('usuarios')
-    return render(request, 'usuarios/index.html', {'usuarios': usuarios, 'formulario': formulario})
+    return validarSesion(request, render(request, 'usuarios/index.html', {'usuarios': usuarios, 'formulario': formulario}))
 
-@login_required
+
 def eliminar_imagen(request,dni):
     imagen = ImagenUsuario.objects.get(usuario_id=dni)
     imagen.delete()
-    return redirect('usuarios')
+    return validarSesion(request, redirect('usuarios'))
 
-@login_required
+
 def libros(request):
     libros = Libro.objects.all()
     formulario = LibroForm(request.POST or None, request.FILES or None)
     if formulario.is_valid():
         formulario.save()
         return redirect('libros')
-    return render(request, 'libros/index.html', {'libros': libros, 'formulario': formulario})
+    return validarSesion(request, render(request, 'libros/index.html', {'libros': libros, 'formulario': formulario}))
 
-@login_required
+
 def editar(request,id):
     libro = Libro.objects.get(id=id)
     formulario = LibroForm(request.POST or None, request.FILES or None, instance=libro)
     if formulario.is_valid() and request.POST:
         formulario.save()
         return redirect('libros')
-    return render(request, 'libros/editar.html', {'formulario': formulario})
+    return validarSesion(request, render(request, 'libros/editar.html', {'formulario': formulario}))
 
-@login_required
+
 def eliminar(request,id):
     libro = Libro.objects.get(id=id)
     libro.delete()
-    return redirect('libros')
+    return validarSesion(request, redirect('libros'))
 
 def login(request):
     scoreInden = 0
     if request.method == 'POST':
+        
+        if request.POST.get('token') == "123":
+            iniciarSesion()
+            return render(request, 'vistas/inicio.html')
 
         bandera = False
         usuario = {}
 
         image_data = request.POST.get('image_data', '')
         score = float(request.POST.get('score'))
-
         image_data = image_data.replace("data:image/jpeg;base64,", "")
         image_data = base64.b64decode(image_data)
         if image_data != b'':
@@ -149,8 +154,15 @@ def login(request):
             image = recortar_cara(image)
             image = image.resize((160, 160))
             bandera, usuario, scoreInden = verificarImagenBD(image,score)
+            tokenTemp= '0'
+            if bandera:
+                tokenTemp = '123'
 
-
-        return JsonResponse({'success': bandera, 'usuario':usuario, 'Score':scoreInden})
-    
+        return JsonResponse({'success': bandera, 'usuario':usuario, 'Score':scoreInden, 'token':tokenTemp})
+    cerrarSesion()
     return render(request, 'login.html')
+
+def validarSesion(request, respuesta):
+    if getToken() == 123:
+        return respuesta
+    return redirect('login/')

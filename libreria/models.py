@@ -9,6 +9,7 @@ class Libro(models.Model):
     descripcion = models.TextField(verbose_name = "Descripcion", null=True)
     publicacion = models.DateField(verbose_name = "Publicacion",null=True)
     autor = models.TextField(verbose_name = "Autor",null=True)
+    precio = models.TextField(verbose_name = "Precio",null=True)
 
     def __str__(self):
         fila = "Titulo: " + self.titulo + " - " + "Descripcion: " + self.descripcion
