@@ -18,23 +18,7 @@ Clonamos el repositorio:
 git clone https://github.com/Jeremymr2/proyectobi-g3.git
 ```
 
-Instalamos la librería de virtualenv:
-```sh
-pip install virtualenv
-```
-
-Creamos el entorno virtual:
-```sh
-python -m virtualenv
-```
-
-Activamos el entorno virtual:
-```sh
-.\env\Scripts\activate
-```
-
-> En caso usemos windows y nos salga el error de activación, usar:
-> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Abrimos el proyecto en nuestro editor de código de preferencia y en una terminal abierta en la misma carpeta ponemos lo siguiente:
 
 Procedemos con la instalación de paquetes:
 ```sh
