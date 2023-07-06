@@ -15,7 +15,7 @@
 
 Clonamos el repositorio:
 ```sh
-git clone https://github.com/Jeremymr2/proyectobi-g3.git
+git clone https://github.com/jmrsec/proyectobi-g3.git
 ```
 
 Abrimos el proyecto en nuestro editor de código de preferencia y en una terminal abierta en la misma carpeta ponemos lo siguiente:
